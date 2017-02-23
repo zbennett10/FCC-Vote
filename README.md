@@ -1,5 +1,8 @@
 # `create-react-app` with a server example
 
+#currently at:
+-working on poll test
+
 [![TravisCI](https://travis-ci.org/fullstackreact/food-lookup-demo.svg?branch=master)](https://travis-ci.org/fullstackreact/food-lookup-demo)
 [![Dolphins](https://d17oy1vhnax1f7.cloudfront.net/items/3A1B470B1O2h0e0j1L47/dolphins.svg)](https://www.fullstackreact.com)
 
