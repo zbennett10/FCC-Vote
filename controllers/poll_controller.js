@@ -13,7 +13,6 @@ module.exports = {
     },
 
     fetchPoll(req, res, next) {
-        console.log(req.params.id);
         Poll.findById(req.params.id)
             .populate('user')
             .then((poll) => {

@@ -14,11 +14,13 @@
     "moment": "^2.17.1",
     "mongoose": "^4.8.4",
     "nodemon": "^1.11.0",
+    "passport-facebook": "^2.1.1",
     "sql.js": "0.3.2",
     "supertest": "^3.0.0"
   },
   "scripts": {
-    "test": "nodemon --exec mocha -R min -t 5000",
+    "globals": "npm i -g cross-env",
+    "test": "cross-env NODE_ENV=test&& nodemon --exec mocha --recursive -R min",
     "start": "concurrently \"npm run server\" \"npm run client\"",
     "server": "babel-node server.js",
     "client": "babel-node start-client.js",

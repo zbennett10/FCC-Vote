@@ -73,7 +73,6 @@ describe('Poll Controller', () => {
                         assert(response.body.title === 'Individual');
                         done();
                     });
-            })
-        
-    })
+            });
+    });
 });
