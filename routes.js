@@ -1,8 +1,7 @@
-//import controllers here
+const PollController = require('./controllers/poll_controller');
 
 module.exports = (app) => {
     //define routes that get data here
-    app.get('/', function(req,res) {
-        res.send({poop: "poop"});
-    });
+    app.get('/', PollController.index);
+    app.get('/poll/:id', PollController.fetchPoll);
 }
