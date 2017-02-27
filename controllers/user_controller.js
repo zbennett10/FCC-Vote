@@ -2,7 +2,16 @@ const User = require('../models/user');
 const Poll = require('../models/poll');
 const mongoose = require('mongoose');
 
+
 module.exports = {
+
+    createPoll(req, res, next) {
+        const pollProps = req.body;
+        Poll.create(pollProps)
+            .then((poll) => res.send(poll))
+            .catch(next);
+    },
+
     deletePoll(req, res, next) {
         const pollId = req.params.id;
         Poll.findByIdAndRemove({_id: pollId})
@@ -24,21 +33,7 @@ module.exports = {
         Poll.findByIdAndUpdate(pollId, {$push: req.body}, {'new': true})
             .then((poll) => {
                 res.send(poll);
-            });
-    },
-
-    authCallback(req, res, next) {
-        //call signin here
-    },
-
-    signOut(req, res, next) {
-
-    }
-
-    
+            })
+            .catch(next);
+     }
 }
-
-//helper function that is used by authCallback
-function signIn(req, res, next) {
-        //authenticate
-};

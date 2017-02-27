@@ -3,6 +3,12 @@ const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
     name: String,
+    facebook: {
+        id: String,
+        token: String,
+        name: String,
+        email: String
+    },
     joinDate: Date,
     polls: [{
         type: Schema.Types.ObjectId,

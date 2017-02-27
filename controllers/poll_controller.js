@@ -1,5 +1,6 @@
 const Poll = require('../models/poll');
 const mongoose = require('mongoose');
+const fs = require('fs');
 
 module.exports = {
     //define poll functions

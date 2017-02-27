@@ -8,5 +8,5 @@ module.exports = (app) => {
     app.delete('/poll/:id', UserController.deletePoll);
     app.get('/user/:id', UserController.viewPolls);
     app.put('/poll/:id', UserController.addOption);
-    app.get('/auth/:provider/callback', UserController.authCallback);
+    app.post('/create-poll', UserController.createPoll);
 }

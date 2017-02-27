@@ -38,7 +38,22 @@ describe('User Controller', () => {
 
     });
 
-    //fix this test to check for authentication first
+    //add authentication
+    it('allows a user to create a poll', (done) => {
+       Poll.count().then(count =>{
+           request(app)
+            .post('/create-poll')
+            .send({title: 'New Poll'})
+            .end(() => {
+                Poll.count().then(newCount => {
+                    assert(count + 1 === newCount);
+                    done();
+                });
+            });
+       });      
+    });
+
+    //add authentication
     it('allows user to delete one of their polls', (done) => {
         request(app)
             .delete('/poll/' + poll1.id)
@@ -51,7 +66,7 @@ describe('User Controller', () => {
             });
     });
 
-    //fix this test to check for authentication first
+    //add authentication
     it('allows user to view all of their polls', (done) => {
         request(app)
             .get('/user/' + user1.id)
@@ -61,8 +76,8 @@ describe('User Controller', () => {
             });
     });
 
-    //fix this test to check for authentication first
-    it('allows user to add a voting option to their poll', (done) => {
+    //add authentication
+    it('allows user to add a voting option to a poll', (done) => {
         request(app)
             .put('/poll/' + poll1.id)
             .send({options: ['Falafel Hotdogs']})
@@ -72,20 +87,6 @@ describe('User Controller', () => {
                         assert(poll.options[1] === 'Falafel Hotdogs');
                         done();
                     })
-            });
-    });
-
-    //fix this test to check for authentication and then addition to another user poll
-    xit('allows user to add a voting option to another user poll', (done) => {
-        request(app)
-            .put('/poll/' + poll3.id)
-            .send({options: ['Cinnamon']})
-            .end(() => {
-                Poll.findById(poll3.id)
-                    .then((poll) => {
-                        assert(poll3.options[1] === 'Cinnamon');
-                        done();
-                    });
             });
     });
 });

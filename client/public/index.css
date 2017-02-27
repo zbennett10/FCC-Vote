@@ -1,0 +1,11 @@
+.app-main {
+    font-family: 'montserrat';
+}
+
+header {
+    font-size: 40px;
+}
+
+.add-poll-button {
+    float: left;
+}
