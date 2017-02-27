@@ -75,4 +75,27 @@ describe('Poll Controller', () => {
                     });
             });
     });
+
+    it('increments a polls vote count by one', (done) => {
+        const poll = new Poll({
+            title: "Increment Vote",
+            options: ['trump', 'hilary'],
+            description: 'description'
+        });
+        poll.save()
+            .then(() => {
+                request(app)
+                    .put('/poll/' + poll.id + '/vote')
+                    .send({votes: 1})
+                    .end(() => {
+                        Poll.findById(poll.id)
+                            .then((poll) => {
+                                assert(poll.votes === 1);
+                                done()
+                            }); 
+                    });
+            }); 
+    });
+
+    
 });

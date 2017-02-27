@@ -6,6 +6,7 @@ const PollSchema = new Schema({
     title: String,
     options: [String],
     description: String,
+    votes: {type: Number, default: 0},
     user: {
         type: Schema.Types.ObjectId,
         ref: 'user'

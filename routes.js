@@ -9,4 +9,5 @@ module.exports = (app) => {
     app.get('/user/:id', UserController.viewPolls);
     app.put('/poll/:id', UserController.addOption);
     app.post('/create-poll', UserController.createPoll);
+    app.put('/poll/:id/vote', PollController.vote);
 }

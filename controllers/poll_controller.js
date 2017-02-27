@@ -1,6 +1,5 @@
 const Poll = require('../models/poll');
 const mongoose = require('mongoose');
-const fs = require('fs');
 
 module.exports = {
     //define poll functions
@@ -16,6 +15,14 @@ module.exports = {
     fetchPoll(req, res, next) {
         Poll.findById(req.params.id)
             .populate('user')
+            .then((poll) => {
+                res.send(poll);
+            })
+            .catch(next);
+    },
+
+    vote(req, res, next) {
+        Poll.findByIdAndUpdate(req.params.id, {$inc: {votes: 1}}, {'new': true})
             .then((poll) => {
                 res.send(poll);
             })

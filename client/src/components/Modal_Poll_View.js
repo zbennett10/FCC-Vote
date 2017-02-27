@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 import axios from 'axios';
 import Modal from 'react-modal';
 import {modalStyle} from './modalStyle';
+import Chart from './Chart';
 
 //make call to update endpoint when an option needs to be changed
 //open and close this modal in the same fashion as add poll modal
@@ -15,11 +16,27 @@ class PollViewModal extends Component {
     }
 
     render() {
+        const options = this.props.options.map(option => {
+            return (
+                <div class='checkbox'>
+                    <label><input type='checkbox' value=''/>{option}</label>
+                </div>
+            )
+
+        });
+
         return(
             <Modal name="viewPollModal" isOpen={this.props.open}
                     contentLabel="Modal"
                     style={modalStyle}>
-                    
+                    <h1>{this.props.title}</h1>
+
+                    <p>{this.props.desc}</p>
+
+                    <div>
+                        {options}
+                    </div>
+
                     <footer>
                           <div className="btn-group">
                               <button className="btn btn-lg btn-danger"
