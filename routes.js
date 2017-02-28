@@ -10,4 +10,5 @@ module.exports = (app) => {
     app.put('/poll/:id', UserController.addOption);
     app.post('/create-poll', UserController.createPoll);
     app.put('/poll/:id/vote', PollController.vote);
+    app.post('/signup', UserController.signup);
 }

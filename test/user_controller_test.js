@@ -11,9 +11,21 @@ describe('User Controller', () => {
     beforeEach((done) => {
         user1 = new User({name: 'Zach'});
         user2 = new User({name: 'Josh'});
-        poll1 = new Poll({title: 'Poll1', options: ['Sandwich']});
-        poll2 = new Poll({title: 'Poll2', options: ['Brick']});
-        poll3 = new Poll({title: 'Poll3', options: ['Sauce']});
+        poll1 = new Poll(
+            {title: 'Poll1', options: [{
+                title: 'Sandwich'
+            }]
+        });
+        poll2 = new Poll(
+            {title: 'Poll2', options: [{
+                title: 'Brick'
+            }]
+        });
+        poll3 = new Poll(
+            {title: 'Poll3', options: [{
+                title: 'Sauce'
+            }]
+        });
         user1.polls.push(poll1);
         user1.polls.push(poll2);
         user2.polls.push(poll3);
@@ -80,11 +92,11 @@ describe('User Controller', () => {
     it('allows user to add a voting option to a poll', (done) => {
         request(app)
             .put('/poll/' + poll1.id)
-            .send({options: ['Falafel Hotdogs']})
+            .send({options: {title:'Falafel Hotdogs'}})
             .end(() => {
                 Poll.findById(poll1.id)
                     .then((poll) => {
-                        assert(poll.options[1] === 'Falafel Hotdogs');
+                        assert(poll.options[1].title === 'Falafel Hotdogs');
                         done();
                     })
             });

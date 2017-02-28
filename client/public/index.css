@@ -9,3 +9,21 @@ header {
 .add-poll-button {
     float: left;
 }
+
+.vote-chart {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.option-container {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.vote-option {
+    margin-right: 10px;
+}
+
+.add-option-button {
+    margin-top: 20px;
+}

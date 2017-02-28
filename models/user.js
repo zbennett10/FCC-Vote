@@ -1,14 +1,10 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const bcrypt = require('bcrypt-nodejs');
 
 const UserSchema = new Schema({
-    name: String,
-    facebook: {
-        id: String,
-        token: String,
-        name: String,
-        email: String
-    },
+    email: { type: String, unique: true},
+    password: String,
     joinDate: Date,
     polls: [{
         type: Schema.Types.ObjectId,

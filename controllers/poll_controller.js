@@ -22,10 +22,20 @@ module.exports = {
     },
 
     vote(req, res, next) {
-        Poll.findByIdAndUpdate(req.params.id, {$inc: {votes: 1}}, {'new': true})
+        const optionToUpdate = req.body.options.title;
+        console.log(optionToUpdate);
+        Poll.findById(req.params.id)
             .then((poll) => {
-                res.send(poll);
-            })
-            .catch(next);
+                let updatedOptions = poll.options; //assign options array to a temp variable
+                updatedOptions.forEach(option => {
+                    if(option.title === optionToUpdate) option.votes++; //increment specific options vote count
+                });
+
+                Poll.findByIdAndUpdate(req.params.id, {options: updatedOptions}, {'new': true})
+                    .then((poll) => {
+                        res.send(poll);
+                    })
+                    .catch(next);
+                });
     }
 }

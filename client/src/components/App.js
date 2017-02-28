@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
-import { createPoll, viewPoll, fetchAllPolls } from '../actions/index';
+import { createPoll, fetchAllPolls } from '../actions/index';
 import Poll from './Poll';
-import Modal from 'react-modal';
 import AddPollModal from './Modal_Add_Poll';
 
 
@@ -51,11 +50,13 @@ class App extends Component {
     findAllPolls()
       .then(response => this.props.fetchAllPolls(response));
   }
+
+
   
   render() {
 
     const polls = this.props.polls.map(poll => {
-          return <Poll key={poll._id} title={poll.title} desc={poll.description}
+          return <Poll key={poll._id} id={poll._id} title={poll.title} desc={poll.description}
                    options={poll.options}/>
     });
 
@@ -63,7 +64,13 @@ class App extends Component {
       <div className="app-main container">
         <button className="add-poll-button btn btn-lg btn-primary"
                 onClick={this.toggleAddPollModal}>Add Poll</button>
-        <header className="jumbotron text-center">Welcome to Voter!</header>
+        <header className="jumbotron text-center">
+          Welcome to Voter!
+          <a href=""
+                className="btn btn-lg btn-primary">Github Login</a>
+          <button onClick={null}
+            className="btn btn-lg btn-warning">Logout</button>
+        </header>
         <ul className="list-group">
           {polls}
         </ul>
@@ -71,15 +78,15 @@ class App extends Component {
         <AddPollModal open={this.state.addPollModalOpen} 
                     toggleOpen={this.toggleAddPollModal}
                     fetchAllPolls={this.props.fetchAllPolls}/>
-        
 
+      {this.props.children}
       </div>
     );
   }
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({createPoll, viewPoll, fetchAllPolls}, dispatch);
+  return bindActionCreators({createPoll, fetchAllPolls}, dispatch);
 };
 
 function mapStateToProps(state) {

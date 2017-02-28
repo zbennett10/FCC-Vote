@@ -6,12 +6,12 @@ const User = require('../models/user');
 describe('Poll Model', () => {
     beforeEach((done) => {
         const user = new User({
-            name: 'Zach',
+            email: 'Zach',
             joinDate: moment().format()
         });
         const poll = new Poll({
             title: 'Title', 
-            options: ['trump', 'hilary'],
+            options: [{title:'trump'}, {title: 'hilary'}],
             description: 'description'
         });
         poll.user = user;
@@ -25,7 +25,7 @@ describe('Poll Model', () => {
             .populate('user')
             .then((poll) => {
                 assert(poll.title === 'Title');
-                assert(poll.user.name === 'Zach')
+                assert(poll.user.email === 'Zach')
                 done();
             }); 
     });

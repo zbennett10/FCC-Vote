@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { addPollOption } from '../actions/index';
+import { fetchAllPolls } from '../actions/index';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import axios from 'axios';
@@ -7,23 +7,59 @@ import Modal from 'react-modal';
 import {modalStyle} from './modalStyle';
 import Chart from './Chart';
 
-//make call to update endpoint when an option needs to be changed
-//open and close this modal in the same fashion as add poll modal
+
 
 class PollViewModal extends Component {
     constructor(props) {
         super(props)
+
+        this.onVote = this.onVote.bind(this);
+        this.onAddOption = this.onAddOption.bind(this);
+    }
+
+    onVote(optionTitle) {
+        axios.put(`http://localhost:3001/poll/${this.props.id}/vote`, {options: {title: optionTitle}})
+            .then(() => {
+                axios.get('http://localhost:3001/')
+                    .then((response) => {
+                        this.props.fetchAllPolls(response.data);
+                    })
+                    .catch(error => console.log(error));
+            })
+            .catch(error => console.log(error));
+    }
+
+    
+
+    onAddOption() {
+        if(!this.refs.addOptionInput.value) return;
+        console.log(this.refs.addOptionInput.value);
+        //make request to update option endpoint
+        axios.put(`http://localhost:3001/poll/${this.props.id}`, {options: {title: this.refs.addOptionInput.value}})
+            .then(() => {
+                axios.get('http://localhost:3001/')
+                    .then((response) => {
+                        this.props.fetchAllPolls(response.data);
+                    })
+                    .catch(error => console.log(error));
+            })
+            .catch(error => console.log(error));
+
+            this.refs.addOptionInput.value = ''; //clear text in input
     }
 
     render() {
         const options = this.props.options.map(option => {
             return (
-                <div class='checkbox'>
-                    <label><input type='checkbox' value=''/>{option}</label>
+                <div className='checkbox'>
+                    <label className="vote-option">{option.title}</label>
+                    <button className="btn btn-sm btn-success"
+                            onClick={() => this.onVote(option.title)}>Vote</button>
                 </div>
             )
-
         });
+
+
 
         return(
             <Modal name="viewPollModal" isOpen={this.props.open}
@@ -33,11 +69,22 @@ class PollViewModal extends Component {
 
                     <p>{this.props.desc}</p>
 
-                    <div>
-                        {options}
+                    <div className="row">
+                        <div className="col-4 option-container">
+                            {options}
+                            <button className="btn btn-sm btn-primary add-option-button"
+                                    onClick={this.onAddOption}
+                                    >Add Option</button>
+                            <input className="form-control"
+                                type="text" placeholder="Option name"
+                                ref="addOptionInput"/>
+                        </div>
+                        <div className="col-8">
+                            <Chart options={this.props.options}/>
+                        </div>
                     </div>
 
-                    <footer>
+                    <footer className="navbar navbar-fixed-bottom">
                           <div className="btn-group">
                               <button className="btn btn-lg btn-danger"
                                   onClick={this.props.toggleOpen}>Close</button>
@@ -49,7 +96,7 @@ class PollViewModal extends Component {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({addPollOption}, dispatch);
+    return bindActionCreators({fetchAllPolls}, dispatch);
 }
 
 export default connect(null, mapDispatchToProps)(PollViewModal);

@@ -11,30 +11,30 @@ describe('Poll Controller', () => {
 
     beforeEach((done) => {
         user1 = new User({
-            name: 'Zach',
+            email: 'Zach',
             joinDate: moment().format()
         });
 
         user2 = new User({
-            name: 'Josh',
+            email: 'Josh',
             joinDate: moment().format()
         });
 
         poll1 = new Poll({
             title: 'Poll1', 
-            options: ['trump', 'hilary'],
+            options: [{title:'trump'}, {title:'hilary'}],
             description: 'description'
         });
 
         poll2 = new Poll({
             title: 'Poll2',
-            options: ['trump', 'hilary'],
+            options: [{title: 'trump'}, {title:'hilary'}],
             description: 'description'
         });
 
         poll3 = new Poll({
             title: 'Poll3',
-            options: ['trump', 'hilary'],
+            options: [{title:'trump'}, {title:'hilary'}],
             description: 'description'
         });
 
@@ -62,7 +62,7 @@ describe('Poll Controller', () => {
     it('shows individual poll page', (done) => {
         const poll = new Poll({
             title: "Individual", 
-            options: ['trump', 'hilary'],
+            options: [{title: 'trump'}, {title:'hilary'}],
             description: 'description'
         });
         poll.save()
@@ -79,23 +79,25 @@ describe('Poll Controller', () => {
     it('increments a polls vote count by one', (done) => {
         const poll = new Poll({
             title: "Increment Vote",
-            options: ['trump', 'hilary'],
+            options: [{title:'trump'}, {title: 'hilary'}],
             description: 'description'
         });
         poll.save()
             .then(() => {
                 request(app)
                     .put('/poll/' + poll.id + '/vote')
-                    .send({votes: 1})
+                    .send({options: {title: 'trump'}})
                     .end(() => {
                         Poll.findById(poll.id)
                             .then((poll) => {
-                                assert(poll.votes === 1);
+                                assert(poll.options[0].votes === 1);
                                 done()
                             }); 
                     });
             }); 
     });
 
-    
+    xit('can register votes to specific options', (done) => {
+
+    });
 });

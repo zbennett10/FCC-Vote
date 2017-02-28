@@ -2,9 +2,9 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const passport = require('passport');
 const route = require('./routes');
-
+const http = require('http');
+const morgan = require('morgan');
 
 const app = express();
 
@@ -17,7 +17,9 @@ if(process.env.NODE_ENV !== 'test'){
                 });
 }
 
-app.use(bodyParser.json()); //user body parser middleware
+app.use(morgan('combined'));
+
+app.use(bodyParser.json({type: '*/*'})); //user body parser middleware
 route(app); //connect server to routes
 
 app.use((err,req,res,next) => {
