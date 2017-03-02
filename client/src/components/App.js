@@ -4,6 +4,9 @@ import {bindActionCreators} from 'redux';
 import { createPoll, fetchAllPolls } from '../actions/index';
 import Poll from './Poll';
 import AddPollModal from './Modal_Add_Poll';
+import SignupModal from './Modal_Signup';
+import SigninModal from './Modal_Signin';
+import { browserHistory } from 'react-router';
 
 
 function findAllPolls(cb) {
@@ -29,20 +32,32 @@ function parseJSON(response) {
   return response.json();
 }
 
-//this component recieves state from rootreducers and passes it down as props to each poll
-
 class App extends Component {
   constructor(props) {
     super(props)
-    this.toggleAddPollModal = this.toggleAddPollModal.bind(this);
+    this.sendToUserProfile = this.sendToUserProfile.bind(this);
+    this.toggleSignupModal = this.toggleSignupModal.bind(this);
+    this.toggleSigninModal = this.toggleSigninModal.bind(this);
 
     this.state = {
-      addPollModalOpen: false
+      addPollModalOpen: false,
+      signupModalOpen: false,
+      signinModalOpen: false
     }
   }
 
-  toggleAddPollModal() {
-    this.setState({addPollModalOpen: !this.state.addPollModalOpen});
+  sendToUserProfile() {
+    if(this.props.user.userID) {
+      browserHistory.push(`/user/${this.props.user.userID}`);
+    }
+  }
+
+  toggleSignupModal() {
+    this.setState({signupModalOpen: !this.state.signupModalOpen});
+  }
+
+  toggleSigninModal() {
+    this.setState({signinModalOpen: !this.state.signinModalOpen});
   }
 
   componentDidMount() {
@@ -54,7 +69,6 @@ class App extends Component {
 
   
   render() {
-
     const polls = this.props.polls.map(poll => {
           return <Poll key={poll._id} id={poll._id} title={poll.title} desc={poll.description}
                    options={poll.options}/>
@@ -62,22 +76,34 @@ class App extends Component {
 
     return (
       <div className="app-main container">
-        <button className="add-poll-button btn btn-lg btn-primary"
-                onClick={this.toggleAddPollModal}>Add Poll</button>
+        
         <header className="jumbotron text-center">
-          Welcome to Voter!
-          <a href=""
-                className="btn btn-lg btn-primary">Github Login</a>
-          <button onClick={null}
-            className="btn btn-lg btn-warning">Logout</button>
+          <nav className="navbar navbar-light">
+            <button onClick={this.toggleSigninModal}
+                className="btn btn-lg btn-primary nav-item">Sign in
+            </button>
+            <button onClick={this.toggleSignupModal} 
+                className="btn btn-lg btn-primary nav-item">Sign up
+            </button>
+            
+            <button onClick={this.sendToUserProfile}
+                className="btn btn-lg btn-success nav-item">Profile
+              </button>
+          </nav>
+          <h1>Voter!</h1>
+          
         </header>
         <ul className="list-group">
           {polls}
         </ul>
 
-        <AddPollModal open={this.state.addPollModalOpen} 
-                    toggleOpen={this.toggleAddPollModal}
-                    fetchAllPolls={this.props.fetchAllPolls}/>
+        
+        <SignupModal open={this.state.signupModalOpen}
+                     toggleOpen={this.toggleSignupModal}
+                      />
+        <SigninModal open={this.state.signinModalOpen}
+                     toggleOpen={this.toggleSigninModal}
+                     />
 
       {this.props.children}
       </div>
@@ -90,7 +116,7 @@ function mapDispatchToProps(dispatch) {
 };
 
 function mapStateToProps(state) {
-  return {polls: state.polls}
+  return {polls: state.polls, user: state.user}
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

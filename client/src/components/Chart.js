@@ -39,7 +39,6 @@ export default (props) => {
             }
         }
     }
-    console.log(chartData, chartOptions);
 
     return (
         <div className="vote-chart">

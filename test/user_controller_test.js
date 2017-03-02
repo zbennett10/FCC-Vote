@@ -9,8 +9,8 @@ const User = require('../models/user');
 describe('User Controller', () => {
     let user1, user2, poll1, poll2, poll3;
     beforeEach((done) => {
-        user1 = new User({name: 'Zach'});
-        user2 = new User({name: 'Josh'});
+        user1 = new User({email: 'email@email.com'});
+        user2 = new User({email: 'whatever@email.com'});
         poll1 = new Poll(
             {title: 'Poll1', options: [{
                 title: 'Sandwich'
@@ -52,17 +52,18 @@ describe('User Controller', () => {
 
     //add authentication
     it('allows a user to create a poll', (done) => {
-       Poll.count().then(count =>{
-           request(app)
-            .post('/create-poll')
-            .send({title: 'New Poll'})
-            .end(() => {
-                Poll.count().then(newCount => {
-                    assert(count + 1 === newCount);
-                    done();
-                });
-            });
-       });      
+                request(app)
+                    .post(`/user/${user1.id}/create-poll`)
+                    .send({title: 'New Poll'})
+                    .end(() => {
+                        User.findById(user1.id)
+                        .populate('polls')
+                        .then((user) => {
+                            assert(user.polls[2].title === 'New Poll');
+                            done();
+                        })
+                    });
+          
     });
 
     //add authentication

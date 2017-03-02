@@ -16,14 +16,22 @@ class AddPollModal extends Component {
 
     addPoll(event) {
         event.preventDefault();
+        const optionTitles = this.refs.pollOptions.value.split(',').map(word => word.trim());
         const pollProps = {
             title: this.refs.pollTitle.value,
             description: this.refs.pollDesc.value,
-            options: this.refs.pollOptions.value.split(',').map(word => word.trim())
+            options: []
         }
-        axios.post('http://localhost:3001/create-poll', pollProps)
-            .then(response => this.props.createPoll([response.data]))
-            .catch(error => console.log(error));
+        optionTitles.forEach(title => pollProps.options.push({title: title, votes: 0}));
+        axios.post(`http://localhost:3001/user/${this.props.userID}/create-poll`, pollProps)
+            .then((response) => {
+                this.props.createPoll([response.data])
+            })
+            .catch(error => {
+                console.log(Object.assign({}, error));
+                console.log(typeof error);
+                console.log(Object.getOwnPropertyNames(error));
+            });
 
         this.props.toggleOpen();
         return false;

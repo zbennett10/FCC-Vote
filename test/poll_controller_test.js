@@ -11,12 +11,12 @@ describe('Poll Controller', () => {
 
     beforeEach((done) => {
         user1 = new User({
-            email: 'Zach',
+            email: 'Zach@email.com',
             joinDate: moment().format()
         });
 
         user2 = new User({
-            email: 'Josh',
+            email: 'Josh@email.com',
             joinDate: moment().format()
         });
 

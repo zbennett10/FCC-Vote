@@ -23,7 +23,6 @@ module.exports = {
 
     vote(req, res, next) {
         const optionToUpdate = req.body.options.title;
-        console.log(optionToUpdate);
         Poll.findById(req.params.id)
             .then((poll) => {
                 let updatedOptions = poll.options; //assign options array to a temp variable

@@ -14,9 +14,20 @@ function tokenForUser(user) {
 module.exports = {
 
     createPoll(req, res, next) {
+        const userID = req.params.id;
         const pollProps = req.body;
         Poll.create(pollProps)
-            .then((poll) => res.send(poll))
+            .then((poll) => {
+                User.findById(userID)
+                    .then((user) => {
+                        user.polls.push(poll);
+                        poll.user = user;
+                        Promise.all([user.save(), poll.save()])
+                            .then(() => res.send(poll))
+                            .catch(next);
+                    })
+                    .catch(next);
+            })
             .catch(next);
     },
 
@@ -30,6 +41,7 @@ module.exports = {
     viewPolls(req, res, next) {
         const userId = req.params.id;
         User.findById(userId)
+            .populate('polls')
             .then((user) => {
                 res.send(user.polls);
             })
@@ -67,8 +79,26 @@ module.exports = {
              })
              user.save(function(err) {
                  if(err) return next(err);
-                 res.json({ token: tokenForUser(user) });
+                 res.json({ 
+                     token: tokenForUser(user),
+                     id: user.id
+                    });
              });
          });
+     },
+
+     signin(req, res, next) {
+         //give user token 
+         console.log('sending token and user id');
+         console.log(req.user);
+         res.send({ 
+             token: tokenForUser(req.user),
+             id: req.user._id
+            });
+     },
+
+     signout(req, res, next) {
+         req.logout();
+         res.send({success: 'Successfully logged out.'});
      }
 }

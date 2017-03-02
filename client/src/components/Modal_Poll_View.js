@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
-import { fetchAllPolls } from '../actions/index';
+import { fetchAllPolls, fetchUserPolls } from '../actions/index';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import axios from 'axios';
 import Modal from 'react-modal';
 import {modalStyle} from './modalStyle';
 import Chart from './Chart';
-
-
 
 class PollViewModal extends Component {
     constructor(props) {
@@ -18,6 +16,8 @@ class PollViewModal extends Component {
     }
 
     onVote(optionTitle) {
+        //change this call based on url
+        if(this.props.path !== `/user/${this.props.userID}`) {
         axios.put(`http://localhost:3001/poll/${this.props.id}/vote`, {options: {title: optionTitle}})
             .then(() => {
                 axios.get('http://localhost:3001/')
@@ -27,13 +27,24 @@ class PollViewModal extends Component {
                     .catch(error => console.log(error));
             })
             .catch(error => console.log(error));
+        } else {
+            axios.put(`http://localhost:3001/poll/${this.props.id}/vote`, {options: {title: optionTitle}})
+            .then(() => {
+                axios.get(`http://localhost:3001/user/${this.props.userID}`)
+                    .then((response) => {
+                        console.log(response.data);
+                        this.props.fetchUserPolls(response.data);
+                    })
+                    .catch(error => console.log(error));
+            })
+            .catch(error => console.log(error));
+        }
     }
 
     
 
     onAddOption() {
         if(!this.refs.addOptionInput.value) return;
-        console.log(this.refs.addOptionInput.value);
         //make request to update option endpoint
         axios.put(`http://localhost:3001/poll/${this.props.id}`, {options: {title: this.refs.addOptionInput.value}})
             .then(() => {
@@ -59,7 +70,7 @@ class PollViewModal extends Component {
             )
         });
 
-
+        //check state to see if user is authenticated and render add option input if it is
 
         return(
             <Modal name="viewPollModal" isOpen={this.props.open}
@@ -96,7 +107,11 @@ class PollViewModal extends Component {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({fetchAllPolls}, dispatch);
+    return bindActionCreators({fetchAllPolls, fetchUserPolls}, dispatch);
 }
 
-export default connect(null, mapDispatchToProps)(PollViewModal);
+function mapStateToProps(state) {
+    return {polls: state.polls};
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PollViewModal);

@@ -30,10 +30,13 @@ class Poll extends Component {
 
                 <ViewPollModal open={this.state.viewPollModalOpen}
                                 toggleOpen={this.toggleViewPollModal}
-                                title={this.props.title} desc={this.props.desc}
+                                title={this.props.title} 
+                                desc={this.props.desc}
                                 options={this.props.options}
                                 key={this.props.key}
-                                id={this.props.id}/>
+                                userID={this.props.userID}
+                                id={this.props.id}
+                                path={this.props.path}/>
             </li>
         );
     }

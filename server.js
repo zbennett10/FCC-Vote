@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const route = require('./routes');
 const http = require('http');
 const morgan = require('morgan');
+const cors = require('cors');
+const passport = require('passport');
 
 const app = express();
 
@@ -18,9 +20,11 @@ if(process.env.NODE_ENV !== 'test'){
 }
 
 app.use(morgan('combined'));
-
+app.use(cors());
+app.use(bodyParser.urlencoded({ extended: true }));  
 app.use(bodyParser.json({type: '*/*'})); //user body parser middleware
 route(app); //connect server to routes
+//app.use(passport.initialize());
 
 app.use((err,req,res,next) => {
   res.status(422).send({error: err.message});
